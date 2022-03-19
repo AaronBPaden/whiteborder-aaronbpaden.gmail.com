@@ -12,3 +12,8 @@ This extension will create a white border around the display. This should allow 
 Running games with compositing has input latency implications, will prevent VRR from activating and for modern, more demanding games the performance penalty may be prohibitive.
 
 That said, this extension is useful for running standalone emulators like Supermodel and PCSX2, as well as older Windows applications in Wine like HOTD.
+
+
+## Supported versions
+
+Currently, this only supports Gnome 41. If someone tests with an earlier version and finds it still working, I'll add that version to the metadata.json.
