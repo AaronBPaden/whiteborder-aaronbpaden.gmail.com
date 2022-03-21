@@ -4,5 +4,5 @@
 	"description": "Draw a white border around the desktop to enable (hopefully) universal application support for the Sinden Lightgun.",
 	"shell-version": ["41"],
 	"url": "https://github.com/AaronBPaden/whiteborder-aaronbpaden.gmail.com",
-	"version": 1
+	"version": 2
 }
