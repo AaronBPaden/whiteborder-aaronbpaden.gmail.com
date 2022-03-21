@@ -4,6 +4,8 @@
 
 This extension will create a white border around the display. This should allow Sinden Lightguns to work even if there isn't support for custom overlays in the application.
 
+You can install it from extensions.gnome.org here: https://extensions.gnome.org/extension/4922/white-border-overlay/
+
 
 ## WARNING
 
