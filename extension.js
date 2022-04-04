@@ -71,7 +71,9 @@ const fourByThreeEvent = () => {
     resetStyle();
 };
 
-const enable = () => {
+function init() {}
+
+function enable() {
     // log("Enabling White Border Overlay");
     Meta.disable_unredirect_for_display(global.display);
 
@@ -91,7 +93,7 @@ const enable = () => {
     Main.panel._rightBox.insert_child_at_index(fourByThreeButton, 0);
 };
 
-const disable = () => {
+function disable() {
     // log("Disabling White Border Overlay");
 
     Main.layoutManager.removeChrome(overlay);
@@ -110,5 +112,3 @@ const disable = () => {
     global.window_manager.disconnect(resetStyleId);
     resetStyleId = null;
 };
-
-const init = () => {};
