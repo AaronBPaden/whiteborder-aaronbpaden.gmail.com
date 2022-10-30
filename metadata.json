@@ -2,7 +2,7 @@
 	"uuid": "whiteborder@aaronbpaden.gmail.com",
 	"name": "White Border Overlay",
 	"description": "Draw a white border around the desktop to enable (hopefully) universal application support for the Sinden Lightgun.",
-	"shell-version": ["3.36", "3.38", "40", "41", "42"],
+	"shell-version": ["3.36", "3.38", "40", "41", "42", "43"],
 	"url": "https://github.com/AaronBPaden/whiteborder-aaronbpaden.gmail.com",
-	"version": 3
+	"version": 4
 }
