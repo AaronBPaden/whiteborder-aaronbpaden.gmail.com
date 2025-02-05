@@ -91,8 +91,8 @@ const resetStyle = () => {
   }
 
   overlay.show();
-  width -= border_size * 2;
-  height -= border_size * 2;
+  const inner_width = width - border_size * 2;
+  const inner_height = height - border_size * 2;
   overlay.set_style(
     `background-color: transparent;
         margin-left: ${
@@ -101,8 +101,8 @@ const resetStyle = () => {
             : 0
         }px;
         border: ${border_size}px solid white;
-        width: ${width}px;
-        height: ${height}px;`
+        width: ${inner_width}px;
+        height: ${inner_height}px;`
   );
 };
 
