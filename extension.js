@@ -1,9 +1,11 @@
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const { Meta, St, Clutter } = imports.gi;
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+
+import Meta from 'gi://Meta';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
 
 let overlay = null;
 
@@ -105,52 +107,57 @@ const resetStyle = () => {
         height: ${inner_height}px;`
   );
 };
+let resetStyleId = null;
 
 const overlayEvent = () => {
   overlayState = (overlayState + 1) % 4;
   resetStyle();
 };
 
-function init() {}
+export default class Me extends Extension {
 
-function enable() {
-  // log("Enabling White Border Overlay");
-  Meta.disable_unredirect_for_display(global.display);
+  init() {}
 
-  overlay = new St.Widget();
-  resetStyle();
-  Main.layoutManager.addChrome(overlay, { affectsInputRegion: false });
-  resetStyleId = global.window_manager.connect("size-changed", resetStyle);
+  enable() {
+    // log("Enabling White Border Overlay");
+    Meta.disable_unredirect_for_display(global.display);
 
-  overlayButton = new St.Bin({
-    style_class: "panel-button",
-    reactive: true,
-    can_focus: true,
-    track_hover: true,
-  });
-  overlayButton.set_child(
-    new St.Label({ text: "  ▣  ", y_align: Clutter.ActorAlign.CENTER })
-  );
-  overlayEventId = overlayButton.connect("button-press-event", overlayEvent);
-  Main.panel._rightBox.insert_child_at_index(overlayButton, 0);
-}
+    overlay = new St.Widget();
+    resetStyle();
+    Main.layoutManager.addChrome(overlay, { affectsInputRegion: false });
+    resetStyleId = global.window_manager.connect("size-changed", resetStyle);
 
-function disable() {
-  // log("Disabling White Border Overlay");
+    overlayButton = new St.Bin({
+      style_class: "panel-button",
+      reactive: true,
+      can_focus: true,
+      track_hover: true,
+    });
+    overlayButton.set_child(
+      new St.Label({ text: "  ▣  ", y_align: Clutter.ActorAlign.CENTER })
+    );
+    overlayEventId = overlayButton.connect("button-press-event", overlayEvent);
+    Main.panel._rightBox.insert_child_at_index(overlayButton, 0);
+  }
 
-  Main.layoutManager.removeChrome(overlay);
-  overlay.destroy();
-  overlay = null;
+  disable() {
+    // log("Disabling White Border Overlay");
 
-  Meta.enable_unredirect_for_display(global.display);
+    Main.layoutManager.removeChrome(overlay);
+    overlay.destroy();
+    overlay = null;
 
-  Main.panel._rightBox.remove_child(overlayButton);
-  overlayButton.disconnect(overlayEventId);
-  overlayButton.destroy_all_children();
-  overlayButton.destroy();
-  overlayButton = null;
-  overlayEventId = null;
+    Meta.enable_unredirect_for_display(global.display);
 
-  global.window_manager.disconnect(resetStyleId);
-  resetStyleId = null;
+    Main.panel._rightBox.remove_child(overlayButton);
+    overlayButton.disconnect(overlayEventId);
+    overlayButton.destroy_all_children();
+    overlayButton.destroy();
+    overlayButton = null;
+    overlayEventId = null;
+
+    global.window_manager.disconnect(resetStyleId);
+    resetStyleId = null;
+  }
+
 }
