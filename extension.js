@@ -13,83 +13,33 @@ let overlayState = 0; // 0: disabled, 1: 4x3, 2: 16x9, 3: full screen
 let overlayButton = null;
 let overlayEventId = null;
 
-const fourByThree = (width, height) => {
-  const resolutions = [
-    [8192, 6144],
-    [7680, 5760],
-    [6144, 4608],
-    [5120, 3840],
-    [4096, 3072],
-    [3840, 2880],
-    [3072, 2304],
-    [2880, 2160],
-    [2560, 1920],
-    [2048, 1536],
-    [1920, 1440],
-    [1856, 1392],
-    [1600, 1200],
-    [1440, 1080],
-    [1400, 1050],
-    [1280, 960],
-    [1152, 864],
-    [1024, 768],
-    [960, 720],
-    [800, 600],
-    [640, 480],
-    [320, 240],
-  ];
-  let resolution = null;
-  resolutions.forEach((r) => {
-    if (width >= r[0] && height >= r[1] && resolution == null) {
-      resolution = { width: r[0], height: r[1] };
-    }
-  });
-  return resolution;
-};
-
-const sixteenByNine = (width, height) => {
-  const resolutions = [
-    [7680, 4320],
-    [5120, 2880],
-    [3840, 2160],
-    [2560, 1440],
-    [1920, 1080],
-    [1600, 900],
-    [1366, 768],
-    [1280, 720],
-    [1024, 576],
-    [960, 540],
-    [854, 480],
-    [640, 360],
-    [320, 180],
-  ];
-  let resolution = null;
-  resolutions.forEach((r) => {
-    if (width >= r[0] && height >= r[1] && resolution == null) {
-      resolution = { width: r[0], height: r[1] };
-    }
-  });
-  return resolution;
+const calcFrameSize = (display_width, display_height, frame_aspect_ratio) => {
+  const display_aspect_ratio = display_width / display_height;
+  if (display_aspect_ratio > frame_aspect_ratio) {
+    return {width: Math.round(display_height * frame_aspect_ratio), height: display_height};
+  } else {
+    return {width: display_width, height: Math.round(display_width / frame_aspect_ratio)};
+  }
 };
 
 const resetStyle = () => {
+  if (overlayState == 0) { // border disabled
+    overlay.hide();
+    return;
+  }
+    
   let { 0: width, 1: height } = global.display.get_size();
   let border_size = width > 2560 ? 40 : width >= 1280 ? 20 : 10;
   const display_width = width;
   const display_height = height;
 
-  switch (overlayState) {
-    case 0: // disabled
-      overlay.hide();
-      return;
-    case 1: // 4x3
-      ({ width, height } = fourByThree(width, height));
-      break;
-    case 2: // 16x9
-      ({ width, height } = sixteenByNine(width, height));
-      break;
-    case 3: // full screen
-      break;
+  const fixed_aspect_ratio = {
+    1: 4/3,
+    2: 16/9,
+    3: null // full screen
+  }[overlayState];    
+  if (fixed_aspect_ratio) {
+    ({ width, height } = calcFrameSize(width, height, fixed_aspect_ratio));
   }
 
   overlay.show();
@@ -97,11 +47,7 @@ const resetStyle = () => {
   const inner_height = height - border_size * 2;
   overlay.set_style(
     `background-color: transparent;
-        margin-left: ${
-          overlayState === 1 || overlayState === 2
-            ? display_width / 2 - width / 2
-            : 0
-        }px;
+        margin-left: ${display_width / 2 - width / 2}px;
         border: ${border_size}px solid white;
         width: ${inner_width}px;
         height: ${inner_height}px;`
